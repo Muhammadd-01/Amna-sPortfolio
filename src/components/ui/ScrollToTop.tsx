@@ -13,18 +13,26 @@ const WhatsAppIcon = () => (
 
 export function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const toggleVisibility = () => {
+    const handleScroll = () => {
+      // Toggle visibility
       if (window.scrollY > 300) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
+
+      // Calculate scroll progress percentage
+      const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const currentScroll = window.scrollY;
+      const progress = totalHeight > 0 ? (currentScroll / totalHeight) * 100 : 0;
+      setScrollProgress(progress);
     };
 
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
@@ -33,6 +41,11 @@ export function ScrollToTop() {
       behavior: "smooth",
     });
   };
+
+  // SVG circle properties
+  const radius = 24;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (scrollProgress / 100) * circumference;
 
   return (
     <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
@@ -46,7 +59,7 @@ export function ScrollToTop() {
             initial={{ opacity: 0, scale: 0.5, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
-            className="relative p-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.6)] hover:bg-[#128C7E] transition-colors group flex items-center justify-center"
+            className="relative p-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.6)] hover:bg-[#128C7E] transition-colors group flex items-center justify-center w-[54px] h-[54px]"
             aria-label="Contact on WhatsApp"
           >
             {/* Blinking ping ring */}
@@ -63,10 +76,34 @@ export function ScrollToTop() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
             onClick={scrollToTop}
-            className="p-3 rounded-full bg-brand-600/80 backdrop-blur-md text-white border border-brand-400 shadow-[0_0_20px_rgba(109,40,217,0.5)] hover:bg-brand-500 transition-colors group flex items-center justify-center"
+            className="relative p-3 rounded-full bg-bg-elevated/80 backdrop-blur-md text-brand-300 hover:text-white shadow-[0_0_20px_rgba(109,40,217,0.3)] transition-colors group flex items-center justify-center w-[54px] h-[54px]"
             aria-label="Scroll to top"
           >
-            <ArrowUp size={24} className="group-hover:-translate-y-1 transition-transform" />
+            {/* Background Circle */}
+            <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 54 54">
+              <circle
+                cx="27"
+                cy="27"
+                r={radius}
+                fill="none"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="3"
+              />
+              {/* Progress Circle */}
+              <circle
+                cx="27"
+                cy="27"
+                r={radius}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+                className="transition-all duration-300 ease-out text-brand-500 group-hover:text-brand-400"
+              />
+            </svg>
+            <ArrowUp size={24} className="group-hover:-translate-y-1 transition-transform relative z-10" />
           </motion.button>
         )}
       </AnimatePresence>

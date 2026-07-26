@@ -38,18 +38,18 @@ export function Skills() {
                     <div key={skill.name} className="relative">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-300 font-medium">{skill.name}</span>
-                        <span className="text-brand-300 text-sm">{skill.level}%</span>
+                        <span className="text-brand-300 text-sm font-semibold">{skill.level}%</span>
                       </div>
-                      <div className="h-2 w-full bg-bg-highlight rounded-full overflow-hidden">
+                      <div className="h-2 w-full bg-bg-highlight rounded-full overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
                         <motion.div
                           initial={{ width: 0 }}
                           whileInView={{ width: `${skill.level}%` }}
                           viewport={{ once: true }}
-                          transition={{ duration: 1, delay: 0.5 + (index * 0.1), ease: "easeOut" }}
-                          className="h-full bg-gradient-to-r from-brand-600 to-brand-400 rounded-full relative"
+                          transition={{ duration: 1.2, delay: 0.3 + (index * 0.1), ease: [0.16, 1, 0.3, 1] }}
+                          className="h-full bg-gradient-to-r from-brand-700 via-brand-500 to-brand-300 rounded-full relative shadow-[0_0_10px_rgba(139,92,246,0.5)]"
                         >
-                          {/* Glow effect on the bar */}
-                          <div className="absolute top-0 right-0 bottom-0 w-4 bg-white/30 blur-[2px]" />
+                          {/* Animated sheen effect */}
+                          <div className="absolute top-0 bottom-0 left-0 w-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)] -translate-x-[100%] animate-[shimmer_2s_infinite]" />
                         </motion.div>
                       </div>
                     </div>

@@ -23,9 +23,20 @@ export function Hero() {
           
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 2.4 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-6 tracking-tight"
+            animate={{ 
+              opacity: 1, 
+              y: [0, -10, 0],
+            }}
+            transition={{ 
+              opacity: { duration: 0.5, delay: 2.4 },
+              y: { 
+                duration: 4, 
+                repeat: Infinity, 
+                ease: "easeInOut",
+                delay: 2.4 
+              }
+            }}
+            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-6 tracking-tight drop-shadow-[0_0_15px_rgba(124,58,237,0.3)]"
           >
             {portfolio.personal.name}
           </motion.h1>

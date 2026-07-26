@@ -37,19 +37,22 @@ export function Experience() {
                 className="absolute top-6 -left-[19px] md:top-8 md:absolute md:left-auto md:right-[-25px] md:even:-left-[25px] w-4 h-4 rounded-full bg-bg-base border-2 border-brand-500 z-10 shadow-[0_0_10px_rgba(124,58,237,0.8)]"
               />
 
-              <GlassCard delay={0.1} className="relative z-0">
-                <span className="inline-block py-1 px-3 rounded-full bg-brand-900/50 text-brand-300 text-sm font-medium mb-4">
-                  {exp.period}
-                </span>
-                <h3 className="text-2xl font-bold text-white mb-1">{exp.position}</h3>
-                <h4 className="text-lg text-brand-400 font-medium mb-4">{exp.company}</h4>
-                <p className="text-gray-400 mb-6 leading-relaxed">
+              <GlassCard delay={0.1} className="relative z-0 p-8 border-l-4 border-l-brand-500/50 hover:border-l-brand-400">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-2">
+                  <h3 className="text-2xl font-bold text-white tracking-tight">{exp.position}</h3>
+                  <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-brand-900/30 text-brand-300 text-sm font-medium border border-brand-800/50 shadow-[inset_0_0_10px_rgba(139,92,246,0.1)]">
+                    {exp.period}
+                  </span>
+                </div>
+                
+                <h4 className="text-lg text-brand-400 font-semibold mb-6 uppercase tracking-widest text-sm">{exp.company}</h4>
+                <p className="text-gray-400 mb-8 leading-relaxed text-lg">
                   {exp.description}
                 </p>
                 
-                <div className="flex flex-wrap gap-2 md:justify-end md:even:justify-start">
+                <div className="flex flex-wrap gap-2">
                   {exp.technologies.map(tech => (
-                    <span key={tech} className="text-xs font-medium px-3 py-1 bg-white/5 text-gray-300 rounded-md border border-white/10">
+                    <span key={tech} className="text-xs font-medium px-3 py-1.5 bg-bg-highlight/50 text-gray-300 rounded-lg border border-white/5 hover:border-brand-500/30 hover:text-white transition-colors">
                       {tech}
                     </span>
                   ))}

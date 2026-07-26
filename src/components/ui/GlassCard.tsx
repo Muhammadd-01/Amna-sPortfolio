@@ -47,13 +47,23 @@ export function GlassCard({ children, className, delay = 0, hoverEffect = true, 
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.7, delay, ease: "easeOut" }}
       className={cn(
-        "glass rounded-[2rem] p-8 relative overflow-hidden group",
-        hoverEffect && "glass-hover",
+        "relative rounded-3xl overflow-hidden group",
+        "bg-gradient-to-br from-brand-900/10 via-bg-elevated/40 to-bg-base/60",
+        "backdrop-blur-xl border border-white/5",
+        "shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]",
+        "before:absolute before:inset-0 before:rounded-3xl before:border before:border-t-white/10 before:border-l-white/10 before:border-b-transparent before:border-r-transparent before:pointer-events-none",
+        "after:absolute after:inset-0 after:bg-gradient-to-br after:from-brand-500/10 after:to-transparent after:rounded-3xl after:opacity-0 group-hover:after:opacity-100 after:transition-opacity after:duration-500 after:pointer-events-none",
+        hoverEffect && "hover:-translate-y-2 hover:border-brand-500/30 hover:shadow-[0_20px_40px_rgba(124,58,237,0.2),inset_0_0_20px_rgba(124,58,237,0.1)] transition-all duration-500",
         className
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      <div className="relative z-10">{children}</div>
+      {/* Liquid glass light reflection */}
+      <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-brand-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      
+      {/* Content wrapper to stay above background elements */}
+      <div className="relative z-10 h-full">
+        {children}
+      </div>
     </motion.div>
   );
 }

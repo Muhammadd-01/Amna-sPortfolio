@@ -28,7 +28,7 @@ export function Projects() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {portfolio.projects.map((project, index) => (
-            <GlassCard key={index} delay={index * 0.1} className="flex flex-col group p-0 overflow-hidden">
+            <GlassCard key={index} delay={index * 0.1} animationType="flip" className="flex flex-col group p-0 overflow-hidden">
               <div className="relative h-64 overflow-hidden bg-bg-highlight">
                 <div className="absolute inset-0 bg-brand-900/30 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 {/* Placeholder Image Div - Replace with next/image */}

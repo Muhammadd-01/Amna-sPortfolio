@@ -21,44 +21,35 @@ export function About() {
           <div className="w-24 h-1 bg-brand-500/50 rounded-full" />
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <GlassCard delay={0.2} hoverEffect={false} className="p-8 md:p-12">
-            <p className="text-gray-300 text-lg leading-relaxed mb-6">
+        <div className="max-w-4xl mx-auto">
+          <GlassCard delay={0.2} hoverEffect={false} animationType="left" className="p-8 md:p-14 relative overflow-hidden">
+            {/* Decorative background element inside the card */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-600/10 blur-[80px] rounded-full pointer-events-none" />
+            
+            <p className="text-gray-300 text-xl leading-relaxed mb-10 relative z-10 font-light">
               {portfolio.personal.bio}
             </p>
-            <div className="space-y-4 text-gray-400">
-              <p className="flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-brand-500" />
-                <strong>Location:</strong> {portfolio.personal.location}
-              </p>
-              <p className="flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-brand-500" />
-                <strong>Focus:</strong> Interactive 3D & Creative Frontend
-              </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-gray-400 relative z-10 pt-8 border-t border-white/5 mt-auto">
+              <div className="flex flex-col gap-2">
+                <span className="text-xs uppercase tracking-widest text-brand-500 font-bold">Location</span>
+                <span className="text-white flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
+                  {portfolio.personal.location}
+                </span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-xs uppercase tracking-widest text-brand-500 font-bold">Focus</span>
+                <span className="text-white">Interactive 3D UI</span>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-xs uppercase tracking-widest text-brand-500 font-bold">Status</span>
+                <span className="text-brand-300 border border-brand-500/30 bg-brand-900/20 px-3 py-1 rounded-full text-sm inline-flex items-center w-max">
+                  Available for Work
+                </span>
+              </div>
             </div>
           </GlassCard>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative h-[400px] rounded-2xl overflow-hidden group"
-          >
-            {/* Image Placeholder with hover effect */}
-            <div className="absolute inset-0 bg-bg-elevated flex items-center justify-center border border-brand-800/50 rounded-2xl">
-              <span className="text-gray-500">Profile Image</span>
-              {/* Replace with next/image in production */}
-              {/* <Image src={portfolio.personal.profileImage} alt={portfolio.personal.name} fill className="object-cover" /> */}
-            </div>
-            
-            {/* Overlay glow */}
-            <div className="absolute inset-0 bg-brand-600/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Decorative corners */}
-            <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-brand-500 opacity-50" />
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-brand-500 opacity-50" />
-          </motion.div>
         </div>
       </div>
     </section>

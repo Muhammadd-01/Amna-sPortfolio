@@ -49,7 +49,7 @@ export function Contact() {
         <div className="grid md:grid-cols-5 gap-12 max-w-5xl mx-auto">
           
           {/* Contact Info */}
-          <div className="md:col-span-2 flex flex-col justify-between">
+          <GlassCard delay={0.1} animationType="up" className="md:col-span-2 p-8 h-full flex flex-col justify-center">
             <div>
               <h3 className="text-2xl font-bold text-white mb-6">Connect</h3>
               <p className="text-gray-400 mb-8 leading-relaxed">
@@ -75,7 +75,7 @@ export function Contact() {
                 ))}
               </div>
             </div>
-          </div>
+          </GlassCard>
 
           {/* Contact Form Placeholder */}
           <GlassCard className="md:col-span-3 p-8">
