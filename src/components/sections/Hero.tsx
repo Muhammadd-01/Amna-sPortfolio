@@ -1,26 +1,13 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { portfolio } from "@/data/portfolio";
 
-// Lazy load the heavy 3D scene
-const HeroScene = dynamic(() => import("@/components/3d/HeroScene").then(mod => mod.HeroScene), {
-  ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-50">
-      <div className="w-32 h-32 rounded-full border-t-2 border-brand-500 animate-spin" />
-    </div>
-  )
-});
-
 export function Hero() {
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-      {/* 3D Background Canvas */}
-      <HeroScene />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="max-w-3xl">

@@ -27,18 +27,19 @@ export function Navbar() {
   ];
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut", delay: 1.5 }}
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
-        isScrolled 
-          ? "bg-bg-elevated/80 backdrop-blur-md border-brand-800/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-4" 
-          : "bg-transparent py-6"
-      )}
-    >
-      <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
+    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 pointer-events-none">
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 1.5 }}
+        className={cn(
+          "pointer-events-auto transition-all duration-300 border rounded-full px-8",
+          isScrolled 
+            ? "bg-bg-elevated/80 backdrop-blur-3xl border-brand-800/50 shadow-[0_10px_40px_-10px_rgba(109,40,217,0.4)] py-3" 
+            : "bg-transparent border-transparent py-4"
+        )}
+      >
+        <div className="flex items-center gap-12">
         <a href="#home" className="text-xl font-bold tracking-wider text-white">
           {portfolio.personal.shortName.toUpperCase()}
         </a>
@@ -101,6 +102,7 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+      </motion.header>
+    </div>
   );
 }

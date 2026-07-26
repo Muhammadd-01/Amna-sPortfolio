@@ -22,7 +22,7 @@ export function About() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <GlassCard delay={0.2} hoverEffect={false} animationType="left" className="p-8 md:p-12">
+          <GlassCard delay={0.2} hoverEffect={false} className="p-8 md:p-12">
             <p className="text-gray-300 text-lg leading-relaxed mb-6">
               {portfolio.personal.bio}
             </p>

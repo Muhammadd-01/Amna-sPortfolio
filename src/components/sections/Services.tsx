@@ -37,7 +37,7 @@ export function Services() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {portfolio.services.map((service, index) => (
-            <GlassCard key={index} delay={index * 0.1} animationType="blur" className="text-center group p-10">
+            <GlassCard key={index} delay={index * 0.1} className="h-full flex flex-col p-8">
               <div className="w-20 h-20 mx-auto bg-brand-900/50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(109,40,217,0.2)]">
                 {iconMap[service.icon] || <Sparkles size={32} className="text-brand-400" />}
               </div>

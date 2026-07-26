@@ -37,7 +37,7 @@ export function Experience() {
                 className="absolute top-6 -left-[19px] md:top-8 md:absolute md:left-auto md:right-[-25px] md:even:-left-[25px] w-4 h-4 rounded-full bg-bg-base border-2 border-brand-500 z-10 shadow-[0_0_10px_rgba(124,58,237,0.8)]"
               />
 
-              <GlassCard delay={0.1} animationType={index % 2 === 0 ? "right" : "left"} className="relative z-0">
+              <GlassCard delay={0.1} className="relative z-0">
                 <span className="inline-block py-1 px-3 rounded-full bg-brand-900/50 text-brand-300 text-sm font-medium mb-4">
                   {exp.period}
                 </span>

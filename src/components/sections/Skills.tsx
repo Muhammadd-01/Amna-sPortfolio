@@ -25,7 +25,7 @@ export function Skills() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category, catIndex) => (
-            <GlassCard key={category} delay={catIndex * 0.1} animationType="scale">
+            <GlassCard key={category} delay={catIndex * 0.1}>
               <h3 className="text-xl font-medium text-white mb-6 flex items-center gap-3">
                 <span className="text-brand-400">#</span>
                 {category}

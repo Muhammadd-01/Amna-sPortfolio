@@ -8,33 +8,46 @@ interface GlassCardProps {
   className?: string;
   delay?: number;
   hoverEffect?: boolean;
-  animationType?: "up" | "left" | "right" | "scale" | "blur" | "flip";
+  animationType?: "up" | "left" | "right" | "scale" | "blur" | "flip" | "3d-back";
 }
 
-export function GlassCard({ children, className, delay = 0, hoverEffect = true, animationType = "up" }: GlassCardProps) {
+export function GlassCard({ children, className, delay = 0, hoverEffect = true, animationType = "3d-back" }: GlassCardProps) {
   
-  const getAnimation = () => {
-    switch(animationType) {
-      case "left": return { initial: { opacity: 0, x: -50 }, whileInView: { opacity: 1, x: 0 } };
-      case "right": return { initial: { opacity: 0, x: 50 }, whileInView: { opacity: 1, x: 0 } };
-      case "scale": return { initial: { opacity: 0, scale: 0.8 }, whileInView: { opacity: 1, scale: 1 } };
-      case "blur": return { initial: { opacity: 0, filter: "blur(10px)" }, whileInView: { opacity: 1, filter: "blur(0px)" } };
-      case "flip": return { initial: { opacity: 0, rotateX: 45 }, whileInView: { opacity: 1, rotateX: 0 } };
-      case "up":
-      default: return { initial: { opacity: 0, y: 50 }, whileInView: { opacity: 1, y: 0 } };
+  const variants = {
+    up: { y: 50, opacity: 0, z: -100, rotateX: 10 },
+    left: { x: -50, opacity: 0, z: -100, rotateY: -10 },
+    right: { x: 50, opacity: 0, z: -100, rotateY: 10 },
+    scale: { scale: 0.8, opacity: 0, z: -200 },
+    flip: { rotateX: -30, opacity: 0, z: -300 },
+    blur: { filter: "blur(10px)", opacity: 0, z: -150, scale: 0.9 },
+    "3d-back": { 
+      z: -500, 
+      opacity: 0, 
+      scale: 0.5,
+      rotateX: 15,
+      y: 100
     }
   };
 
-  const anim = getAnimation();
+  const initialVariant = variants[animationType as keyof typeof variants] || variants["3d-back"];
 
   return (
     <motion.div
-      initial={anim.initial}
-      whileInView={anim.whileInView}
+      initial={initialVariant}
+      whileInView={{ 
+        x: 0, 
+        y: 0, 
+        z: 0, 
+        scale: 1, 
+        rotateX: 0, 
+        rotateY: 0, 
+        opacity: 1, 
+        filter: "blur(0px)" 
+      }}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.7, delay, ease: "easeOut" }}
       className={cn(
-        "glass rounded-2xl p-6 relative overflow-hidden group",
+        "glass rounded-[2rem] p-8 relative overflow-hidden group",
         hoverEffect && "glass-hover",
         className
       )}

@@ -29,7 +29,7 @@ export function Education() {
 
               <div className="space-y-6">
                 {portfolio.education.map((edu, index) => (
-                  <GlassCard key={index} delay={index * 0.1} animationType="up">
+                  <GlassCard key={index} delay={index * 0.1}>
                     <span className="text-brand-400 text-sm font-medium mb-2 block">{edu.year}</span>
                     <h3 className="text-xl font-bold text-white mb-1">{edu.degree}</h3>
                     <h4 className="text-lg text-gray-300 mb-3">{edu.institution}</h4>
