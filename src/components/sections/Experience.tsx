@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
+import { Briefcase } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { useRef, useState } from "react";
 
@@ -124,12 +125,21 @@ export function Experience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-24 flex flex-col items-center"
+          className="mb-20 flex flex-col items-center text-center"
         >
+          <motion.div 
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="w-16 h-16 rounded-2xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(124,58,237,0.2)]"
+          >
+            <Briefcase size={32} className="text-brand-400" />
+          </motion.div>
+          
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 flex items-center gap-4 tracking-tight text-white drop-shadow-lg">
             <span className="text-brand-500 font-light">03.</span> Experience
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent rounded-full mb-10" />
         </motion.div>
 
         <div ref={containerRef} className="relative max-w-5xl mx-auto">

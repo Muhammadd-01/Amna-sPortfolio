@@ -55,12 +55,9 @@ export function Hero() {
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="max-w-4xl relative p-8 md:p-12 rounded-[40px] bg-white/[0.01] backdrop-blur-3xl border border-white/5 shadow-2xl"
+          className="max-w-4xl relative py-12 w-full"
         >
-          {/* Inner Light Reflection */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none rounded-[40px] mix-blend-overlay" />
-
-          <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
+          <div className="relative z-10" style={{ transform: "translateZ(30px)" }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -94,12 +91,33 @@ export function Hero() {
             </motion.h1>
             
             <motion.h2
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
-              className="text-3xl md:text-5xl text-brand-400 font-light mb-8 drop-shadow-md"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.05, delayChildren: 1.6 }
+                }
+              }}
+              className="text-3xl md:text-5xl text-brand-400 font-light mb-8 drop-shadow-md flex flex-wrap items-center justify-center lg:justify-start"
             >
-              {portfolio.personal.role}
+              {portfolio.personal.role.split("").map((char, index) => (
+                <motion.span 
+                  key={index} 
+                  variants={{
+                    hidden: { opacity: 0, display: "none" },
+                    visible: { opacity: 1, display: "inline-block" }
+                  }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                className="inline-block w-[3px] h-8 md:h-12 bg-brand-400 ml-1 md:ml-2 rounded-full"
+              />
             </motion.h2>
             
             <motion.p

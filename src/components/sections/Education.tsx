@@ -2,7 +2,8 @@
 
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
-import { GraduationCap, BookOpen } from "lucide-react";
+import { GraduationCap, BookOpen, FileText, Award } from "lucide-react";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 import { useRef, useState } from "react";
 
 // Spatial Education Card with localized tilt
@@ -139,7 +140,7 @@ export function Education() {
             <span className="text-brand-500 font-light">05.</span> Education
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent rounded-full mb-6" />
-          <p className="text-gray-400 max-w-2xl text-lg font-light">
+          <p className="text-gray-400 max-w-2xl text-lg font-light mb-8">
             My academic journey and continuous pursuit of knowledge in the ever-evolving tech landscape.
           </p>
         </motion.div>
@@ -169,6 +170,75 @@ export function Education() {
             ))}
           </div>
         </div>
+
+        {/* Certifications Subsection */}
+        <div className="mt-24 max-w-4xl mx-auto">
+          <h3 className="text-2xl font-bold text-center text-white mb-10 flex items-center justify-center gap-3">
+            <Award className="text-brand-400" size={24} />
+            Certifications & Training
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {portfolio.certifications.map((cert, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="p-6 rounded-2xl bg-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-brand-500/40 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-4 text-brand-300">
+                  <Award size={20} />
+                </div>
+                <h4 className="text-white font-semibold text-lg mb-1">{cert.name}</h4>
+                <p className="text-brand-400 text-sm font-medium">{cert.organization}</p>
+                {cert.date && <p className="text-gray-500 text-xs mt-2">{cert.date}</p>}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Portfolio Statistics */}
+        <div className="mt-20 max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          {portfolio.statistics.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="p-6 rounded-2xl bg-white/[0.02] backdrop-blur-2xl border border-brand-500/20 text-center"
+            >
+              <div className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-500 mb-2">
+                {stat.value}
+              </div>
+              <div className="text-gray-400 text-xs font-medium uppercase tracking-wider">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-20 flex flex-wrap justify-center gap-6 relative z-20"
+        >
+          <a href={portfolio.personal.resumeUrl} target="_blank" rel="noreferrer">
+            <MagneticButton variant="primary" className="shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] px-8 py-4">
+              View CV
+              <FileText size={18} className="ml-2" />
+            </MagneticButton>
+          </a>
+          <a href={portfolio.personal.resumeUrl} download target="_blank" rel="noreferrer">
+            <MagneticButton variant="outline" className="px-8 py-4 bg-white/[0.02] backdrop-blur-md">
+              Download CV
+              <FileText size={18} className="ml-2" />
+            </MagneticButton>
+          </a>
+        </motion.div>
+
       </div>
     </section>
   );

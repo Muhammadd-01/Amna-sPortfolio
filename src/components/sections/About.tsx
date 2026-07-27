@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { User } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import React, { useRef } from "react";
 
@@ -52,12 +53,21 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-20 text-center md:text-left"
+          className="mb-20 flex flex-col items-center text-center"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 flex items-center justify-center md:justify-start gap-4 tracking-tight text-white drop-shadow-xl">
+          <motion.div 
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="w-16 h-16 rounded-2xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(124,58,237,0.2)]"
+          >
+            <User size={32} className="text-brand-400" />
+          </motion.div>
+          
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 flex items-center gap-4 tracking-tight text-white drop-shadow-xl">
             <span className="text-brand-500 font-light">01.</span> About Me
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-transparent rounded-full mx-auto md:mx-0" />
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent rounded-full mb-10" />
         </motion.div>
 
         <div className="max-w-6xl mx-auto flex justify-center items-center">
@@ -104,13 +114,13 @@ export function About() {
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-500">masterpieces.</span>
                 </h3>
                 
-                <p className="text-gray-300/90 text-lg md:text-xl leading-relaxed mb-6 font-light">
-                  {portfolio.personal.bio}
-                </p>
-                
-                <p className="text-gray-400 text-lg leading-relaxed font-light">
-                  My approach blends thoughtful design with robust engineering, focusing on creating interfaces that feel alive. I specialize in spatial computing aesthetics, 3D web technologies, and premium user experiences.
-                </p>
+                <div className="space-y-4 mb-6">
+                  {portfolio.personal.aboutParagraphs.map((paragraph, index) => (
+                    <p key={index} className="text-gray-300/90 text-base md:text-lg leading-relaxed font-light">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </div>
 
               {/* Spatial Info Nodes */}

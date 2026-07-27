@@ -1,16 +1,71 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ExternalLink, Code2 } from "lucide-react";
+import { ExternalLink, Code2, X } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 
 const Github = ({ size = 20 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
 );
 
-// Spatial Project Card
-function SpatialProjectCard({ project, index }: { project: any, index: number }) {
+// Auto-looping Image Carousel
+function ImageCarousel({ images, layoutIdPrefix, title }: { images: string[], layoutIdPrefix: string, title: string }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (!images || images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images]);
+
+  if (!images || images.length === 0) {
+    return (
+      <motion.div layoutId={`${layoutIdPrefix}-container-${title}`} className="absolute inset-0 flex items-center justify-center text-gray-500 bg-gradient-to-br from-bg-highlight to-bg-elevated">
+        <span className="opacity-50 tracking-widest text-sm font-medium uppercase text-center px-4">Preview: {title}</span>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div layoutId={`${layoutIdPrefix}-container-${title}`} className="relative w-full h-full overflow-hidden bg-bg-elevated">
+      <AnimatePresence mode="popLayout">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="absolute inset-0 flex items-center justify-center text-gray-500 bg-gradient-to-br from-bg-highlight to-bg-elevated"
+        >
+          {/* We use a colored gradient placeholder to represent images since actual files might not exist */}
+          <div className="absolute inset-0 opacity-20" style={{ 
+            backgroundImage: `radial-gradient(circle at center, ${currentIndex % 2 === 0 ? '#7c3aed' : '#3b82f6'}, transparent)`
+          }} />
+          <span className="relative z-10 opacity-50 tracking-widest text-xs font-bold uppercase drop-shadow-md">
+            Image {currentIndex + 1}
+          </span>
+        </motion.div>
+      </AnimatePresence>
+      <div className="absolute inset-0 bg-brand-900/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-bg-base/20 mix-blend-overlay pointer-events-none z-20" />
+      
+      {/* Progress Indicators */}
+      {images.length > 1 && (
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-30">
+          {images.map((_, idx) => (
+            <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-brand-400 scale-125 shadow-[0_0_8px_rgba(124,58,237,0.8)]' : 'bg-white/30'}`} />
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// Spatial Project Card (Grid Item - Slim Vertical Layout)
+function SpatialProjectCard({ project, index, onClick }: { project: any, index: number, onClick: () => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -18,8 +73,8 @@ function SpatialProjectCard({ project, index }: { project: any, index: number })
   const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
@@ -43,17 +98,22 @@ function SpatialProjectCard({ project, index }: { project: any, index: number })
     setOpacity(0);
   };
 
+  // Fallback to first image in array or a placeholder if none exist
+  const imageUrl = project.images && project.images.length > 0 ? project.images[0] : project.image;
+
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.9, y: 30 }}
+      layoutId={`project-wrapper-${project.title}`}
+      initial={{ opacity: 0, scale: 0.95, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9, y: 30 }}
+      exit={{ opacity: 0, scale: 0.95, y: 30 }}
       transition={{ duration: 0.6, delay: index * 0.1, type: "spring", bounce: 0.4 }}
-      className="h-full relative group"
-      style={{ perspective: 1200 }}
+      className="relative group cursor-pointer w-full max-w-[340px] mx-auto h-full"
+      style={{ perspective: 1500 }}
+      onClick={onClick}
     >
-      <div className="absolute inset-0 bg-brand-500/10 blur-[50px] rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ transform: "translateZ(-20px)" }} />
+      <div className="absolute inset-0 bg-brand-500/10 blur-[40px] rounded-[30px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ transform: "translateZ(-20px)" }} />
 
       <motion.div 
         ref={cardRef}
@@ -61,10 +121,10 @@ function SpatialProjectCard({ project, index }: { project: any, index: number })
         onMouseEnter={() => setOpacity(1)}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="relative h-full rounded-[30px] p-[1px] bg-gradient-to-br from-white/10 via-transparent to-white/5 shadow-2xl flex flex-col overflow-visible"
+        className="relative h-full rounded-[24px] p-[1px] bg-gradient-to-br from-white/10 via-transparent to-white/5 shadow-xl overflow-visible flex flex-col"
       >
         <div
-          className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 z-10 rounded-[30px]"
+          className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 z-10 rounded-[24px]"
           style={{
             opacity,
             background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(124, 58, 237, 0.15), transparent 40%)`,
@@ -72,57 +132,55 @@ function SpatialProjectCard({ project, index }: { project: any, index: number })
         />
 
         <div 
-          className="relative z-20 flex flex-col h-full bg-white/[0.02] backdrop-blur-3xl rounded-[29px] overflow-hidden"
+          className="relative z-20 flex flex-col h-full w-full bg-white/[0.02] backdrop-blur-2xl rounded-[23px] overflow-hidden"
           style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
         >
-          {/* Project Image Area (Top) */}
-          <div className="relative h-64 overflow-hidden bg-white/5 border-b border-white/5">
-            <div className="absolute inset-0 bg-brand-900/40 group-hover:bg-transparent transition-colors duration-500 z-10" />
-            <div className="absolute inset-0 flex items-center justify-center text-gray-500 group-hover:scale-110 transition-transform duration-700 ease-out bg-gradient-to-br from-bg-highlight to-bg-elevated">
-              <span className="opacity-50 tracking-widest text-sm font-medium uppercase">Preview: {project.title}</span>
-            </div>
+          {/* Project Image Area (Top side) */}
+          <div className="relative w-full aspect-[4/3] border-b border-white/5 overflow-hidden shrink-0 bg-bg-elevated">
+            {imageUrl ? (
+              <img 
+                src={imageUrl} 
+                alt={project.title} 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-900/40 to-bg-elevated">
+                <span className="text-gray-500 text-sm font-medium uppercase tracking-widest">No Image</span>
+              </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-bg-base/80 to-transparent opacity-60" />
           </div>
           
-          {/* Project Details Area (Bottom) */}
-          <div className="p-8 flex-1 flex flex-col relative z-20" style={{ transform: "translateZ(40px)" }}>
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-
+          {/* Project Details Area (Bottom side) */}
+          <div className="p-6 md:p-8 flex-1 flex flex-col relative z-20 bg-gradient-to-b from-transparent to-white/[0.01]" style={{ transform: "translateZ(30px)" }}>
             <div className="relative z-10 flex flex-col h-full">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <span className="text-brand-400 text-xs font-bold tracking-[0.2em] uppercase mb-3 block opacity-80">
-                    {project.category}
-                  </span>
-                  <h3 className="text-3xl font-bold text-white group-hover:text-brand-300 transition-colors drop-shadow-md tracking-tight">
-                    {project.title}
-                  </h3>
-                </div>
-                
-                <div className="flex gap-3">
-                  {project.githubUrl && (
-                    <a href={project.githubUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-brand-500 hover:border-brand-400 hover:scale-110 transition-all shadow-lg">
-                      <Github size={18} />
-                    </a>
-                  )}
-                  {project.liveUrl && (
-                    <a href={project.liveUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-brand-500 hover:border-brand-400 hover:scale-110 transition-all shadow-lg">
-                      <ExternalLink size={18} />
-                    </a>
-                  )}
-                </div>
+              
+              <div className="flex justify-between items-start mb-3">
+                <motion.span layoutId={`project-category-${project.title}`} className="text-brand-400 text-[10px] font-bold tracking-[0.2em] uppercase opacity-80">
+                  {project.category}
+                </motion.span>
               </div>
               
-              <p className="text-gray-400 mb-8 flex-1 leading-relaxed font-light group-hover:text-gray-300 transition-colors line-clamp-3">
-                {project.description}
-              </p>
+              <motion.h3 layoutId={`project-title-${project.title}`} className="text-2xl font-bold text-white group-hover:text-brand-300 transition-colors drop-shadow-sm tracking-tight mb-3">
+                {project.title}
+              </motion.h3>
               
-              <div className="flex flex-wrap gap-2 mt-auto">
-                {project.technologies.map((tech: string) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-medium text-brand-100 bg-brand-900/30 border border-brand-500/20 rounded-lg shadow-[inset_0_0_10px_rgba(139,92,246,0.1)] backdrop-blur-md">
+              <motion.p layoutId={`project-desc-${project.title}`} className="text-gray-400 mb-6 flex-1 text-sm leading-relaxed font-light group-hover:text-gray-300 transition-colors line-clamp-3">
+                {project.description}
+              </motion.p>
+              
+              <motion.div layoutId={`project-tech-${project.title}`} className="flex flex-wrap gap-2 mt-auto">
+                {project.technologies.slice(0, 3).map((tech: string) => (
+                  <span key={tech} className="px-2.5 py-1 text-[10px] font-medium text-brand-200 bg-brand-900/30 border border-brand-500/20 rounded-md shadow-[inset_0_0_8px_rgba(139,92,246,0.1)] backdrop-blur-sm">
                     {tech}
                   </span>
                 ))}
-              </div>
+                {project.technologies.length > 3 && (
+                  <span className="px-2.5 py-1 text-[10px] font-medium text-brand-200 bg-brand-900/30 border border-brand-500/20 rounded-md shadow-[inset_0_0_8px_rgba(139,92,246,0.1)] backdrop-blur-sm">
+                    +{project.technologies.length - 3}
+                  </span>
+                )}
+              </motion.div>
             </div>
           </div>
         </div>
@@ -133,22 +191,30 @@ function SpatialProjectCard({ project, index }: { project: any, index: number })
 
 export function Projects() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+
   const categories = ["All", ...Array.from(new Set(portfolio.projects.map(project => project.category)))];
   
   const filteredProjects = activeFilter === "All" 
     ? portfolio.projects 
     : portfolio.projects.filter(project => project.category === activeFilter);
 
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [selectedProject]);
+
   return (
     <section id="projects" className="py-32 relative z-10 bg-transparent overflow-hidden">
       
-      {/* Background Liquid Blobs */}
       <div className="absolute top-1/4 -left-64 w-[600px] h-[600px] bg-brand-600/10 blur-[150px] rounded-full pointer-events-none animate-[pulse_15s_ease-in-out_infinite]" />
       <div className="absolute bottom-1/4 -right-64 w-[500px] h-[500px] bg-brand-400/5 blur-[120px] rounded-full pointer-events-none animate-[spin_30s_linear_infinite]" />
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         
-        {/* Standardized Spatial Heading */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -170,7 +236,6 @@ export function Projects() {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent rounded-full mb-10" />
           
-          {/* Filters */}
           <div className="flex flex-wrap justify-center gap-3 md:gap-4 relative z-20">
             {categories.map((category) => (
               <button
@@ -188,14 +253,94 @@ export function Projects() {
           </div>
         </motion.div>
 
-        <motion.div layout className="grid lg:grid-cols-2 gap-10 md:gap-14">
+        {/* Grid Layout for Vertical Cards */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, index) => (
-              <SpatialProjectCard key={project.title} project={project} index={index} />
+              <SpatialProjectCard 
+                key={project.title} 
+                project={project} 
+                index={index} 
+                onClick={() => setSelectedProject(project)}
+              />
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 md:px-12 py-12 perspective-[2000px]">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedProject(null)}
+              className="absolute inset-0 bg-black/50 backdrop-blur-[40px]"
+            />
+            
+            <motion.div
+              layoutId={`project-wrapper-${selectedProject.title}`}
+              className="relative w-full max-w-6xl h-full max-h-[85vh] rounded-[40px] p-[1px] bg-gradient-to-br from-white/20 via-white/5 to-white/10 shadow-[0_0_100px_rgba(124,58,237,0.4)] flex flex-col"
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 border border-white/10 text-white backdrop-blur-xl transition-colors shadow-xl hover:scale-110"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="relative z-20 flex flex-col md:flex-row h-full bg-bg-base/90 backdrop-blur-3xl rounded-[39px] overflow-hidden">
+                
+                {/* Modal Carousel Side */}
+                <div className="md:w-[45%] relative border-r border-white/5 overflow-hidden">
+                  <ImageCarousel images={selectedProject.images} layoutIdPrefix="project-image" title={selectedProject.title} />
+                </div>
+
+                {/* Modal Details Side */}
+                <div className="md:w-[55%] p-8 md:p-14 flex flex-col overflow-y-auto">
+                  <motion.span layoutId={`project-category-${selectedProject.title}`} className="text-brand-400 text-sm font-bold tracking-[0.2em] uppercase mb-4 block opacity-80">
+                    {selectedProject.category}
+                  </motion.span>
+                  
+                  <motion.h3 layoutId={`project-title-${selectedProject.title}`} className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight drop-shadow-md">
+                    {selectedProject.title}
+                  </motion.h3>
+
+                  <motion.div layoutId={`project-tech-${selectedProject.title}`} className="flex flex-wrap gap-2 mb-8">
+                    {selectedProject.technologies.map((tech: string) => (
+                      <span key={tech} className="px-4 py-2 text-sm font-medium text-brand-100 bg-brand-900/30 border border-brand-500/20 rounded-lg shadow-[inset_0_0_10px_rgba(139,92,246,0.1)] backdrop-blur-md">
+                        {tech}
+                      </span>
+                    ))}
+                  </motion.div>
+                  
+                  <motion.p layoutId={`project-desc-${selectedProject.title}`} className="text-gray-300 text-lg leading-relaxed font-light mb-10">
+                    {selectedProject.longDescription || selectedProject.description}
+                  </motion.p>
+
+                  <div className="mt-auto flex gap-4 pt-8 border-t border-white/10">
+                    {selectedProject.githubUrl && (
+                      <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors font-medium hover:scale-[1.02] active:scale-[0.98]">
+                        <Github size={20} />
+                        View Source
+                      </a>
+                    )}
+                    {selectedProject.liveUrl && (
+                      <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-brand-500 text-white hover:bg-brand-400 transition-colors font-medium shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:scale-[1.02] active:scale-[0.98]">
+                        <ExternalLink size={20} />
+                        Live Demo
+                      </a>
+                    )}
+                  </div>
+                </div>
+                
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
