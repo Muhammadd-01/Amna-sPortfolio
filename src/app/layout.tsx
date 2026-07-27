@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Amna Muhammad Nihal | Portfolio",
-  description: "Premium 3D Interactive Developer Portfolio",
-  keywords: ["Amna Muhammad Nihal", "Portfolio", "Frontend Developer", "3D Web Developer", "UI/UX Designer"],
-  authors: [{ name: "Amna Muhammad Nihal" }],
+  title: "Amna Nehal | MERN Stack & Full-Stack Developer",
+  description: "Results-driven MERN Stack Developer specializing in modern, scalable web applications, REST APIs, and AI workflows.",
+  keywords: ["Amna Nehal", "Portfolio", "MERN Stack Developer", "Full-Stack Developer", "React.js", "Node.js", "FastAPI"],
+  authors: [{ name: "Amna Nehal" }],
 };
 
 export default function RootLayout({
@@ -19,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} antialiased bg-bg-base text-foreground selection:bg-brand-500 selection:text-white`}>
+      <body className="font-sans antialiased bg-bg-base text-foreground selection:bg-brand-500 selection:text-white">
         <ScrollToTop />
         {children}
         <div className="noise" />

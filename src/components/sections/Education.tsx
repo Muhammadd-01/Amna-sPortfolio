@@ -98,6 +98,164 @@ function SpatialEducationCard({ edu, index }: { edu: any, index: number }) {
   );
 }
 
+// Spatial Certification Card with 3D Tilt
+function SpatialCertificationCard({ cert, index }: { cert: any; index: number }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    x.set(mouseX / rect.width - 0.5);
+    y.set(mouseY / rect.height - 0.5);
+    setPosition({ x: mouseX, y: mouseY });
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    setOpacity(0);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.6, type: "spring" }}
+      className="relative group cursor-pointer w-full"
+      style={{ perspective: 1000 }}
+    >
+      <div className="absolute inset-0 bg-brand-500/15 blur-[40px] rounded-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ transform: "translateZ(-20px)" }} />
+
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setOpacity(1)}
+        onMouseLeave={handleMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative rounded-[24px] p-[1px] bg-gradient-to-br from-white/15 via-white/5 to-transparent shadow-xl"
+      >
+        <div
+          className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 z-10 rounded-[24px]"
+          style={{
+            opacity,
+            background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(124, 58, 237, 0.2), transparent 40%)`,
+          }}
+        />
+
+        <div
+          className="relative rounded-[23px] bg-white/[0.02] backdrop-blur-2xl p-6 overflow-hidden flex flex-col h-full"
+          style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none mix-blend-overlay" />
+
+          <div className="relative z-10" style={{ transform: "translateZ(30px)" }}>
+            <div className="w-12 h-12 rounded-2xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-4 text-brand-300 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
+              <Award size={24} />
+            </div>
+            <h4 className="text-white font-bold text-xl mb-1 group-hover:text-brand-300 transition-colors drop-shadow-sm">{cert.name}</h4>
+            <p className="text-brand-400 text-sm font-semibold mb-2">{cert.organization}</p>
+            {cert.date && <p className="text-gray-400 text-xs font-light">{cert.date}</p>}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// Spatial Statistics Card with 3D Tilt
+function SpatialStatCard({ stat, index }: { stat: any; index: number }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
+
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    x.set(mouseX / rect.width - 0.5);
+    y.set(mouseY / rect.height - 0.5);
+    setPosition({ x: mouseX, y: mouseY });
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    setOpacity(0);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.6, type: "spring" }}
+      className="relative group cursor-pointer w-full"
+      style={{ perspective: 1000 }}
+    >
+      <div className="absolute inset-0 bg-brand-500/15 blur-[40px] rounded-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ transform: "translateZ(-20px)" }} />
+
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setOpacity(1)}
+        onMouseLeave={handleMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="relative rounded-[24px] p-[1px] bg-gradient-to-br from-white/15 via-white/5 to-transparent shadow-xl"
+      >
+        <div
+          className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 z-10 rounded-[24px]"
+          style={{
+            opacity,
+            background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(124, 58, 237, 0.2), transparent 40%)`,
+          }}
+        />
+
+        <div
+          className="relative rounded-[23px] bg-white/[0.02] backdrop-blur-2xl p-6 overflow-hidden text-center flex flex-col items-center justify-center h-full"
+          style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none mix-blend-overlay" />
+
+          <div className="relative z-10" style={{ transform: "translateZ(30px)" }}>
+            <div className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-500 mb-2 drop-shadow-sm">
+              {stat.value}
+            </div>
+            <div className="text-gray-400 text-xs font-medium uppercase tracking-wider">
+              {stat.label}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function Education() {
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -171,51 +329,23 @@ export function Education() {
           </div>
         </div>
 
-        {/* Certifications Subsection */}
-        <div className="mt-24 max-w-4xl mx-auto">
+        {/* Certifications Subsection with 3D Spatial Tilt */}
+        <div className="mt-24 max-w-5xl mx-auto">
           <h3 className="text-2xl font-bold text-center text-white mb-10 flex items-center justify-center gap-3">
             <Award className="text-brand-400" size={24} />
             Certifications & Training
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {portfolio.certifications.map((cert, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="p-6 rounded-2xl bg-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-brand-500/40 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-4 text-brand-300">
-                  <Award size={20} />
-                </div>
-                <h4 className="text-white font-semibold text-lg mb-1">{cert.name}</h4>
-                <p className="text-brand-400 text-sm font-medium">{cert.organization}</p>
-                {cert.date && <p className="text-gray-500 text-xs mt-2">{cert.date}</p>}
-              </motion.div>
+              <SpatialCertificationCard key={index} cert={cert} index={index} />
             ))}
           </div>
         </div>
 
         {/* Portfolio Statistics */}
-        <div className="mt-20 max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="mt-20 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
           {portfolio.statistics.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="p-6 rounded-2xl bg-white/[0.02] backdrop-blur-2xl border border-brand-500/20 text-center"
-            >
-              <div className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-500 mb-2">
-                {stat.value}
-              </div>
-              <div className="text-gray-400 text-xs font-medium uppercase tracking-wider">
-                {stat.label}
-              </div>
-            </motion.div>
+            <SpatialStatCard key={index} stat={stat} index={index} />
           ))}
         </div>
 

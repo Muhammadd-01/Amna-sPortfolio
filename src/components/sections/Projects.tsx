@@ -109,7 +109,7 @@ function SpatialProjectCard({ project, index, onClick }: { project: any, index: 
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 30 }}
       transition={{ duration: 0.6, delay: index * 0.1, type: "spring", bounce: 0.4 }}
-      className="relative group cursor-pointer w-full max-w-[340px] mx-auto h-full"
+      className="relative group cursor-pointer w-full max-w-[420px] mx-auto h-full"
       style={{ perspective: 1500 }}
       onClick={onClick}
     >
