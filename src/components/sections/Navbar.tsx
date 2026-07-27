@@ -50,14 +50,9 @@ export function Navbar() {
               : "bg-white/[0.03] backdrop-blur-xl border-white/10 py-3 md:py-4"
           )}
         >
-          {/* Logo with Image and Name */}
-          <a href="#home" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden border border-brand-500/40 shadow-[0_0_15px_rgba(124,58,237,0.4)] group-hover:scale-105 transition-transform">
-              <img src="/logo.jpg" alt="Amna Logo" className="w-full h-full object-cover" />
-            </div>
-            <span className="text-lg md:text-xl font-extrabold tracking-wider text-white group-hover:text-brand-300 transition-colors">
-              {portfolio.personal.shortName.toUpperCase()}
-            </span>
+          {/* Text Brand Name */}
+          <a href="#home" className="text-lg md:text-xl font-extrabold tracking-wider text-white hover:text-brand-300 transition-colors">
+            {portfolio.personal.shortName.toUpperCase()}
           </a>
 
           {/* Desktop Nav */}
@@ -111,11 +106,8 @@ export function Navbar() {
               transition={{ duration: 0.3, delay: 0.1 }}
               className="flex flex-col items-center gap-6 text-center w-full max-w-sm"
             >
-              {/* Mobile Brand Logo */}
+              {/* Mobile Brand Title */}
               <div className="flex flex-col items-center mb-4">
-                <div className="w-16 h-16 rounded-2xl border border-brand-500/40 p-1 bg-brand-900/40 shadow-[0_0_25px_rgba(124,58,237,0.5)] mb-3">
-                  <img src="/logo.jpg" alt="Amna Logo" className="w-full h-full object-cover rounded-xl" />
-                </div>
                 <h3 className="text-2xl font-bold text-white tracking-wider">{portfolio.personal.name}</h3>
                 <p className="text-xs text-brand-400 font-medium uppercase tracking-widest mt-1">MERN Stack Developer</p>
               </div>

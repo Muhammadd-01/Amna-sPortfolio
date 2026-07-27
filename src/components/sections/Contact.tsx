@@ -282,12 +282,12 @@ export function Contact() {
                 />
               </div>
 
-              <div className="pt-4">
+              <div className="pt-4 flex justify-center">
                 <MagneticButton 
                   type="submit"
                   disabled={isSubmitting}
                   variant="primary" 
-                  className="w-full justify-center py-4 rounded-2xl text-lg font-bold shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] disabled:opacity-50"
+                  className="px-10 py-4 rounded-2xl text-lg font-bold shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
@@ -308,15 +308,15 @@ export function Contact() {
         </div>
       </div>
 
-      {/* Spatial Success Toast Notification with Decreasing Progressbar */}
+      {/* Spatial Success Toast Notification with Decreasing Progressbar in Top Right */}
       <AnimatePresence>
         {showSuccessToast && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            exit={{ opacity: 0, y: -50, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed bottom-8 right-6 md:right-10 z-50 max-w-md w-[calc(100vw-3rem)] rounded-3xl p-[1px] bg-gradient-to-r from-brand-500 via-brand-300 to-brand-600 shadow-[0_10px_50px_rgba(124,58,237,0.5)]"
+            className="fixed top-8 right-6 md:right-10 z-[100] max-w-md w-[calc(100vw-3rem)] rounded-3xl p-[1px] bg-gradient-to-r from-brand-500 via-brand-300 to-brand-600 shadow-[0_10px_50px_rgba(124,58,237,0.5)]"
           >
             <div className="bg-bg-elevated/95 backdrop-blur-3xl p-6 rounded-[23px] relative overflow-hidden flex flex-col">
               <div className="flex items-start gap-4">

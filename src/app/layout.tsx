@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   keywords: ["Amna Nehal", "Portfolio", "MERN Stack Developer", "Full-Stack Developer", "React.js", "Node.js", "FastAPI"],
   authors: [{ name: "Amna Nehal" }],
   icons: {
-    icon: "/logo.jpg",
-    shortcut: "/logo.jpg",
-    apple: "/logo.jpg",
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 
