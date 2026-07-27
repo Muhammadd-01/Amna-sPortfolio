@@ -36,7 +36,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative z-10 bg-bg-base pt-20 overflow-hidden">
+    <footer className="relative z-10 bg-transparent pt-20 overflow-hidden">
       {/* Decorative Top Border */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-500/50 to-transparent" />
       

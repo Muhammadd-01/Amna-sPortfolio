@@ -1,55 +1,162 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
-import { GlassCard } from "@/components/ui/GlassCard";
+import React, { useRef } from "react";
 
 export function About() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Motion values for 3D spatial effect
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth springs for fluid movement
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  // Map mouse position to rotation angles (subtle rotation for realism)
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    
+    const rect = ref.current.getBoundingClientRect();
+    
+    const width = rect.width;
+    const height = rect.height;
+    
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    // Calculate relative position (-0.5 to 0.5)
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
-    <section id="about" className="py-32 relative z-10">
-      <div className="container mx-auto px-6 md:px-12">
+    <section id="about" className="py-32 relative z-10 overflow-hidden bg-transparent perspective-[2000px]">
+      
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-16"
+          className="mb-20 text-center md:text-left"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 flex items-center gap-4">
-            <span className="text-brand-500 text-glow">01.</span> About Me
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 flex items-center justify-center md:justify-start gap-4 tracking-tight text-white drop-shadow-xl">
+            <span className="text-brand-500 font-light">01.</span> About Me
           </h2>
-          <div className="w-24 h-1 bg-brand-500/50 rounded-full" />
+          <div className="w-24 h-1 bg-gradient-to-r from-brand-500 to-transparent rounded-full mx-auto md:mx-0" />
         </motion.div>
 
-        <div className="max-w-4xl mx-auto">
-          <GlassCard delay={0.2} hoverEffect={false} animationType="left" className="p-8 md:p-14 relative overflow-hidden">
-            {/* Decorative background element inside the card */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-600/10 blur-[80px] rounded-full pointer-events-none" />
-            
-            <p className="text-gray-300 text-xl leading-relaxed mb-10 relative z-10 font-light">
-              {portfolio.personal.bio}
-            </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-gray-400 relative z-10 pt-8 border-t border-white/5 mt-auto">
-              <div className="flex flex-col gap-2">
-                <span className="text-xs uppercase tracking-widest text-brand-500 font-bold">Location</span>
-                <span className="text-white flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
-                  {portfolio.personal.location}
-                </span>
+        <div className="max-w-6xl mx-auto flex justify-center items-center">
+          
+          <motion.div
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              rotateX,
+              rotateY,
+              transformStyle: "preserve-3d",
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 1, type: "spring", bounce: 0.3 }}
+            className="relative w-full rounded-[40px] p-[1px] bg-gradient-to-br from-white/20 via-white/5 to-transparent shadow-2xl"
+          >
+            {/* Liquid Blobs behind the glass layer */}
+            <div className="absolute inset-0 overflow-hidden rounded-[40px] pointer-events-none" style={{ transform: "translateZ(-50px)" }}>
+              <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-500/30 blur-[80px] rounded-full animate-[spin_10s_linear_infinite]" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-300/20 blur-[100px] rounded-full animate-[spin_15s_linear_infinite_reverse]" />
+            </div>
+
+            {/* Main Spatial Glass Card */}
+            <div 
+              className="relative w-full h-full rounded-[39px] bg-white/[0.01] backdrop-blur-3xl overflow-hidden p-8 md:p-16 flex flex-col md:flex-row gap-12"
+              style={{ transformStyle: "preserve-3d", transform: "translateZ(30px)" }}
+            >
+              
+              {/* Inner light reflection */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none mix-blend-overlay" />
+
+              <div className="md:w-3/5 relative" style={{ transform: "translateZ(40px)" }}>
+                <motion.div 
+                  className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-brand-300 text-sm font-medium tracking-widest uppercase mb-6 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                >
+                  Brief Intro
+                </motion.div>
+                
+                <h3 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight tracking-tight">
+                  Crafting digital <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-500">masterpieces.</span>
+                </h3>
+                
+                <p className="text-gray-300/90 text-lg md:text-xl leading-relaxed mb-6 font-light">
+                  {portfolio.personal.bio}
+                </p>
+                
+                <p className="text-gray-400 text-lg leading-relaxed font-light">
+                  My approach blends thoughtful design with robust engineering, focusing on creating interfaces that feel alive. I specialize in spatial computing aesthetics, 3D web technologies, and premium user experiences.
+                </p>
               </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs uppercase tracking-widest text-brand-500 font-bold">Focus</span>
-                <span className="text-white">Interactive 3D UI</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs uppercase tracking-widest text-brand-500 font-bold">Status</span>
-                <span className="text-brand-300 border border-brand-500/30 bg-brand-900/20 px-3 py-1 rounded-full text-sm inline-flex items-center w-max">
-                  Available for Work
-                </span>
+
+              {/* Spatial Info Nodes */}
+              <div className="md:w-2/5 flex flex-col justify-center gap-8 relative" style={{ transform: "translateZ(60px)" }}>
+                
+                <motion.div 
+                  whileHover={{ scale: 1.05, x: 10 }}
+                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-lg shadow-[0_10px_30px_rgba(0,0,0,0.2)] group hover:bg-white/[0.08] transition-colors"
+                >
+                  <span className="text-xs uppercase tracking-[0.2em] text-brand-400 font-bold flex items-center gap-2 mb-2 opacity-80">
+                    Location
+                  </span>
+                  <span className="text-white text-xl flex items-center gap-3 font-medium">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-500 shadow-[0_0_15px_rgba(124,58,237,1)]"></span>
+                    </span>
+                    {portfolio.personal.location}
+                  </span>
+                </motion.div>
+
+                <motion.div 
+                  whileHover={{ scale: 1.05, x: 10 }}
+                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-lg shadow-[0_10px_30px_rgba(0,0,0,0.2)] group hover:bg-white/[0.08] transition-colors"
+                >
+                  <span className="text-xs uppercase tracking-[0.2em] text-brand-400 font-bold flex items-center gap-2 mb-2 opacity-80">
+                    Focus
+                  </span>
+                  <span className="text-white text-xl font-medium">Spatial UI & 3D Web</span>
+                </motion.div>
+
+                <motion.div 
+                  whileHover={{ scale: 1.05, x: 10 }}
+                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-lg shadow-[0_10px_30px_rgba(0,0,0,0.2)] group hover:bg-white/[0.08] transition-colors"
+                >
+                  <span className="text-xs uppercase tracking-[0.2em] text-brand-400 font-bold flex items-center gap-2 mb-2 opacity-80">
+                    Status
+                  </span>
+                  <span className="text-brand-300 font-medium text-xl drop-shadow-[0_0_10px_rgba(124,58,237,0.5)]">
+                    Available for Work
+                  </span>
+                </motion.div>
+
               </div>
             </div>
-          </GlassCard>
+          </motion.div>
         </div>
       </div>
     </section>
