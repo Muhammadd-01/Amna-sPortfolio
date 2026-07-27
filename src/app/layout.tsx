@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: "Results-driven MERN Stack Developer specializing in modern, scalable web applications, REST APIs, and AI workflows.",
   keywords: ["Amna Nehal", "Portfolio", "MERN Stack Developer", "Full-Stack Developer", "React.js", "Node.js", "FastAPI"],
   authors: [{ name: "Amna Nehal" }],
+  icons: {
+    icon: "/logo.jpg",
+    shortcut: "/logo.jpg",
+    apple: "/logo.jpg",
+  },
 };
 
 export default function RootLayout({

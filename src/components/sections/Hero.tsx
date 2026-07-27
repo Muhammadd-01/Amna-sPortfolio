@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { TypewriterText } from "@/components/ui/TypewriterText";
 import { portfolio } from "@/data/portfolio";
 import { useRef } from "react";
 
@@ -91,32 +92,22 @@ export function Hero() {
             </motion.h1>
             
             <motion.h2
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: { staggerChildren: 0.05, delayChildren: 1.6 }
-                }
-              }}
-              className="text-3xl md:text-5xl text-brand-400 font-light mb-8 drop-shadow-md flex flex-wrap items-center justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
+              className="text-3xl md:text-5xl text-brand-400 font-light mb-8 drop-shadow-md min-h-[4rem] flex items-center"
             >
-              {portfolio.personal.role.split("").map((char, index) => (
-                <motion.span 
-                  key={index} 
-                  variants={{
-                    hidden: { opacity: 0, display: "none" },
-                    visible: { opacity: 1, display: "inline-block" }
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </motion.span>
-              ))}
-              <motion.span
-                animate={{ opacity: [1, 0] }}
-                transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-                className="inline-block w-[3px] h-8 md:h-12 bg-brand-400 ml-1 md:ml-2 rounded-full"
+              <TypewriterText 
+                texts={[
+                  "MERN Stack Developer",
+                  "Full-Stack Developer",
+                  "React.js & TypeScript Engineer",
+                  "Node.js & REST API Developer",
+                  "AI & RAG Applications Developer"
+                ]}
+                typingSpeed={70}
+                deletingSpeed={35}
+                pauseTime={2200}
               />
             </motion.h2>
             

@@ -137,18 +137,7 @@ function SpatialProjectCard({ project, index, onClick }: { project: any, index: 
         >
           {/* Project Image Area (Top side) */}
           <div className="relative w-full aspect-[4/3] border-b border-white/5 overflow-hidden shrink-0 bg-bg-elevated">
-            {imageUrl ? (
-              <img 
-                src={imageUrl} 
-                alt={project.title} 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-900/40 to-bg-elevated">
-                <span className="text-gray-500 text-sm font-medium uppercase tracking-widest">No Image</span>
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-bg-base/80 to-transparent opacity-60" />
+            <ImageCarousel images={project.images} layoutIdPrefix="project-image" title={project.title} />
           </div>
           
           {/* Project Details Area (Bottom side) */}
