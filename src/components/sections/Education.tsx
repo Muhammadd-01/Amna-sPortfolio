@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
-import { GraduationCap, BookOpen, FileText, Award } from "lucide-react";
+import { GraduationCap, BookOpen, FileText, Award, Eye, X, ExternalLink, Maximize2 } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 // Spatial Education Card with localized tilt
 function SpatialEducationCard({ edu, index }: { edu: any, index: number }) {
@@ -98,8 +98,8 @@ function SpatialEducationCard({ edu, index }: { edu: any, index: number }) {
   );
 }
 
-// Spatial Certification Card with 3D Tilt
-function SpatialCertificationCard({ cert, index }: { cert: any; index: number }) {
+// Spatial Certification Card with Image Preview & 3D Tilt
+function SpatialCertificationCard({ cert, index, onSelect }: { cert: any; index: number; onSelect?: () => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -136,8 +136,9 @@ function SpatialCertificationCard({ cert, index }: { cert: any; index: number })
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.6, type: "spring" }}
-      className="relative group cursor-pointer w-full"
+      className="relative group cursor-pointer w-full flex flex-col h-full"
       style={{ perspective: 1000 }}
+      onClick={onSelect}
     >
       <div className="absolute inset-0 bg-brand-500/15 blur-[40px] rounded-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ transform: "translateZ(-20px)" }} />
 
@@ -147,7 +148,7 @@ function SpatialCertificationCard({ cert, index }: { cert: any; index: number })
         onMouseEnter={() => setOpacity(1)}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="relative rounded-[24px] p-[1px] bg-gradient-to-br from-white/15 via-white/5 to-transparent shadow-xl"
+        className="relative rounded-[24px] p-[1px] bg-gradient-to-br from-white/15 via-white/5 to-transparent shadow-xl flex-1 flex flex-col"
       >
         <div
           className="pointer-events-none absolute -inset-px opacity-0 transition duration-500 z-10 rounded-[24px]"
@@ -158,18 +159,45 @@ function SpatialCertificationCard({ cert, index }: { cert: any; index: number })
         />
 
         <div
-          className="relative rounded-[23px] bg-white/[0.02] backdrop-blur-2xl p-6 overflow-hidden flex flex-col h-full"
+          className="relative rounded-[23px] bg-white/[0.02] backdrop-blur-2xl overflow-hidden flex flex-col h-full"
           style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none mix-blend-overlay" />
-
-          <div className="relative z-10" style={{ transform: "translateZ(30px)" }}>
-            <div className="w-12 h-12 rounded-2xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-4 text-brand-300 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
-              <Award size={24} />
+          {/* Certificate Image Thumbnail (if available) */}
+          {cert.image ? (
+            <div className="relative w-full aspect-[16/10] bg-bg-elevated overflow-hidden border-b border-white/10 group/img cursor-pointer">
+              <img
+                src={cert.image}
+                alt={cert.name}
+                className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg-base/90 via-bg-base/30 to-transparent opacity-60 group-hover/img:opacity-40 transition-opacity" />
+              
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all duration-300 bg-brand-900/60 backdrop-blur-xs">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500 text-white text-xs font-bold shadow-[0_0_15px_rgba(124,58,237,0.8)] tracking-wide">
+                  <Eye size={14} /> View Certificate
+                </span>
+              </div>
             </div>
-            <h4 className="text-white font-bold text-xl mb-1 group-hover:text-brand-300 transition-colors drop-shadow-sm">{cert.name}</h4>
+          ) : (
+            <div className="p-6 pb-0">
+              <div className="w-12 h-12 rounded-2xl bg-brand-900/50 border border-brand-500/30 flex items-center justify-center mb-4 text-brand-300 shadow-[0_0_15px_rgba(124,58,237,0.2)]">
+                <Award size={24} />
+              </div>
+            </div>
+          )}
+
+          {/* Certificate Content Info */}
+          <div className="p-6 flex-1 flex flex-col relative z-10" style={{ transform: "translateZ(30px)" }}>
+            <h4 className="text-white font-bold text-xl mb-1 group-hover:text-brand-300 transition-colors drop-shadow-sm">
+              {cert.name}
+            </h4>
             <p className="text-brand-400 text-sm font-semibold mb-2">{cert.organization}</p>
-            {cert.date && <p className="text-gray-400 text-xs font-light">{cert.date}</p>}
+            {cert.date && <p className="text-brand-300/70 text-xs font-medium mb-3">{cert.date}</p>}
+            {cert.description && (
+              <p className="text-gray-400 text-xs leading-relaxed font-light mt-auto pt-3 border-t border-white/5 group-hover:text-gray-300 transition-colors">
+                {cert.description}
+              </p>
+            )}
           </div>
         </div>
       </motion.div>
@@ -258,7 +286,8 @@ function SpatialStatCard({ stat, index }: { stat: any; index: number }) {
 
 export function Education() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  const [selectedCert, setSelectedCert] = useState<any | null>(null);
+
   // Track scroll progress inside the container for the timeline
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -267,6 +296,14 @@ export function Education() {
 
   const heightProgress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const smoothHeight = useSpring(heightProgress, { stiffness: 50, damping: 20 });
+
+  useEffect(() => {
+    if (selectedCert) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [selectedCert]);
 
   return (
     <section id="education" className="py-32 relative z-10 bg-transparent overflow-hidden">
@@ -329,15 +366,20 @@ export function Education() {
           </div>
         </div>
 
-        {/* Certifications Subsection with 3D Spatial Tilt */}
+        {/* Certifications Subsection with 3D Spatial Tilt & Image Modal */}
         <div className="mt-24 max-w-5xl mx-auto">
           <h3 className="text-2xl font-bold text-center text-white mb-10 flex items-center justify-center gap-3">
             <Award className="text-brand-400" size={24} />
-            Certifications & Training
+            Certifications & Accomplishments
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {portfolio.certifications.map((cert, index) => (
-              <SpatialCertificationCard key={index} cert={cert} index={index} />
+              <SpatialCertificationCard 
+                key={index} 
+                cert={cert} 
+                index={index} 
+                onSelect={() => cert.image && setSelectedCert(cert)}
+              />
             ))}
           </div>
         </div>
@@ -370,6 +412,77 @@ export function Education() {
         </motion.div>
 
       </div>
+
+      {/* High Resolution Lightbox Certificate Preview Modal */}
+      <AnimatePresence>
+        {selectedCert && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedCert(null)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-[40px]"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="relative z-10 max-w-5xl w-full max-h-[90vh] bg-bg-elevated/95 border border-white/10 rounded-[32px] overflow-hidden flex flex-col shadow-[0_0_80px_rgba(124,58,237,0.5)]"
+            >
+              {/* Modal Header */}
+              <div className="p-6 md:px-8 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-sm">
+                    {selectedCert.name}
+                  </h3>
+                  <p className="text-brand-300 text-sm font-semibold">
+                    {selectedCert.organization} {selectedCert.date && `• ${selectedCert.date}`}
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <a
+                    href={selectedCert.image}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-colors"
+                    title="Open Full Quality File"
+                  >
+                    <ExternalLink size={18} />
+                  </a>
+                  <button
+                    onClick={() => setSelectedCert(null)}
+                    className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Certificate Image View */}
+              <div className="flex-1 overflow-y-auto p-4 md:p-8 flex items-center justify-center bg-black/40">
+                <img
+                  src={selectedCert.image}
+                  alt={selectedCert.name}
+                  className="max-w-full max-h-[65vh] object-contain rounded-2xl border border-white/10 shadow-2xl"
+                />
+              </div>
+
+              {/* Modal Footer */}
+              {selectedCert.description && (
+                <div className="p-6 md:px-8 border-t border-white/10 bg-white/[0.02] text-gray-300 text-sm font-light">
+                  {selectedCert.description}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 }

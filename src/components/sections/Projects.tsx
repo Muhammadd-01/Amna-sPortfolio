@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ExternalLink, Code2, X } from "lucide-react";
+import { ExternalLink, Code2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 
 const Github = ({ size = 20 }) => (
@@ -12,14 +12,27 @@ const Github = ({ size = 20 }) => (
 // Auto-looping Image Carousel
 function ImageCarousel({ images, layoutIdPrefix, title }: { images: string[], layoutIdPrefix: string, title: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    if (!images || images.length <= 1) return;
+    if (!images || images.length <= 1 || isHovered) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
+    }, 2800);
     return () => clearInterval(interval);
-  }, [images]);
+  }, [images, isHovered]);
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!images || images.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!images || images.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
 
   if (!images || images.length === 0) {
     return (
@@ -30,36 +43,78 @@ function ImageCarousel({ images, layoutIdPrefix, title }: { images: string[], la
   }
 
   return (
-    <motion.div layoutId={`${layoutIdPrefix}-container-${title}`} className="relative w-full h-full overflow-hidden bg-bg-elevated">
+    <motion.div 
+      layoutId={`${layoutIdPrefix}-container-${title}`} 
+      className="relative w-full h-full overflow-hidden bg-bg-elevated group/carousel"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <AnimatePresence mode="popLayout">
         <motion.div
           key={currentIndex}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="absolute inset-0 flex items-center justify-center text-gray-500 bg-gradient-to-br from-bg-highlight to-bg-elevated"
+          transition={{ duration: 0.7, ease: "easeInOut" }}
+          className="absolute inset-0 w-full h-full"
         >
-          {/* We use a colored gradient placeholder to represent images since actual files might not exist */}
-          <div className="absolute inset-0 opacity-20" style={{ 
-            backgroundImage: `radial-gradient(circle at center, ${currentIndex % 2 === 0 ? '#7c3aed' : '#3b82f6'}, transparent)`
-          }} />
-          <span className="relative z-10 opacity-50 tracking-widest text-xs font-bold uppercase drop-shadow-md">
-            Image {currentIndex + 1}
-          </span>
+          <img
+            src={images[currentIndex]}
+            alt={`${title} preview ${currentIndex + 1}`}
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
         </motion.div>
       </AnimatePresence>
-      <div className="absolute inset-0 bg-brand-900/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-bg-base/20 mix-blend-overlay pointer-events-none z-20" />
-      
-      {/* Progress Indicators */}
+
+      {/* Hover overlay gradient */}
+      <div className="absolute inset-0 bg-brand-900/10 group-hover/carousel:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
+
+      {/* Manual Navigation Controls */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-30">
+        <>
+          <button
+            onClick={handlePrev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-black/50 hover:bg-brand-600 border border-white/20 text-white flex items-center justify-center backdrop-blur-md opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:scale-110"
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-black/50 hover:bg-brand-600 border border-white/20 text-white flex items-center justify-center backdrop-blur-md opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:scale-110"
+            aria-label="Next image"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </>
+      )}
+
+      {/* Progress Indicators / Dot Counter */}
+      {images.length > 1 && (
+        <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 z-30 pointer-events-auto">
           {images.map((_, idx) => (
-            <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-brand-400 scale-125 shadow-[0_0_8px_rgba(124,58,237,0.8)]' : 'bg-white/30'}`} />
+            <button
+              key={idx}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex(idx);
+              }}
+              className={`transition-all duration-300 ${
+                idx === currentIndex
+                  ? 'w-6 h-1.5 rounded-full bg-brand-400 shadow-[0_0_10px_rgba(124,58,237,0.9)]'
+                  : 'w-1.5 h-1.5 rounded-full bg-white/40 hover:bg-white/80'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
           ))}
         </div>
       )}
+
+      {/* Image Counter Badge */}
+      <div className="absolute top-4 left-4 z-30 px-3 py-1 rounded-full bg-black/60 border border-white/10 backdrop-blur-md text-[10px] font-bold text-gray-300 tracking-widest uppercase">
+        {currentIndex + 1} / {images.length}
+      </div>
     </motion.div>
   );
 }

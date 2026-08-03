@@ -27,13 +27,13 @@ export function Navbar() {
   }, [mobileMenuOpen]);
 
   const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Experience", href: "#experience" },
-    { name: "Projects", href: "#projects" },
-    { name: "Services", href: "#services" },
-    { name: "Education", href: "#education" },
+    { name: "Home", href: "/#home" },
+    { name: "About", href: "/#about" },
+    { name: "Skills", href: "/#skills" },
+    { name: "Experience", href: "/#experience" },
+    { name: "Projects", href: "/#projects" },
+    { name: "Services", href: "/#services" },
+    { name: "Education", href: "/#education" },
   ];
 
   return (
@@ -51,7 +51,7 @@ export function Navbar() {
           )}
         >
           {/* Text Brand Name */}
-          <a href="#home" className="text-lg md:text-xl font-extrabold tracking-wider text-white hover:text-brand-300 transition-colors">
+          <a href="/#home" className="text-lg md:text-xl font-extrabold tracking-wider text-white hover:text-brand-300 transition-colors">
             {portfolio.personal.shortName.toUpperCase()}
           </a>
 
@@ -68,7 +68,7 @@ export function Navbar() {
               </a>
             ))}
             <a
-              href="#contact"
+              href="/#contact"
               className="px-5 py-2 rounded-full border border-brand-500/50 text-sm font-medium text-white hover:bg-brand-500/20 transition-all shadow-[0_0_15px_rgba(124,58,237,0.2)]"
             >
               Let's Talk
@@ -129,7 +129,7 @@ export function Navbar() {
               </div>
 
               <a
-                href="#contact"
+                href="/#contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className="mt-4 w-full py-3.5 rounded-2xl bg-gradient-to-r from-brand-500 to-brand-700 text-white font-bold tracking-wide shadow-[0_0_25px_rgba(124,58,237,0.5)] border border-brand-400/50"
               >

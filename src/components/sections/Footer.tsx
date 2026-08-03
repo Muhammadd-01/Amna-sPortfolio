@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { portfolio } from "@/data/portfolio";
 import { Mail, ArrowUpRight } from "lucide-react";
@@ -11,12 +12,6 @@ const GithubIcon = ({ size = 20 }) => (
 const LinkedinIcon = ({ size = 20 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
 );
-const InstagramIcon = ({ size = 20 }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-);
-const TwitterIcon = ({ size = 20 }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-);
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,16 +19,19 @@ export function Footer() {
   const socialLinks = [
     { icon: <GithubIcon size={20} />, url: portfolio.social.github, name: "GitHub" },
     { icon: <LinkedinIcon size={20} />, url: portfolio.social.linkedin, name: "LinkedIn" },
-    { icon: <InstagramIcon size={20} />, url: portfolio.social.instagram, name: "Instagram" },
-    { icon: <TwitterIcon size={20} />, url: portfolio.social.twitter, name: "Twitter" },
   ].filter(link => link.url);
 
   const quickLinks = [
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Experience", href: "#experience" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
+    { name: "About", href: "/#about" },
+    { name: "Skills", href: "/#skills" },
+    { name: "Experience", href: "/#experience" },
+    { name: "Projects", href: "/#projects" },
+    { name: "Contact", href: "/#contact" },
+  ];
+
+  const legalLinks = [
+    { name: "Terms & Conditions", href: "/terms" },
+    { name: "Privacy Policy", href: "/privacy" },
   ];
 
   return (
@@ -76,17 +74,34 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="md:col-span-3 lg:col-span-2 lg:col-start-7">
+          <div className="md:col-span-3 lg:col-span-2 lg:col-start-6">
             <h3 className="text-lg font-semibold text-white mb-6">Navigation</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <a 
+                  <Link 
                     href={link.href}
                     className="text-gray-400 hover:text-brand-400 transition-colors inline-block hover:translate-x-1 transform duration-300"
                   >
                     {link.name}
-                  </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal Links */}
+          <div className="md:col-span-3 lg:col-span-2">
+            <h3 className="text-lg font-semibold text-white mb-6">Legal</h3>
+            <ul className="space-y-3">
+              {legalLinks.map((link) => (
+                <li key={link.name}>
+                  <Link 
+                    href={link.href}
+                    className="text-gray-400 hover:text-brand-400 transition-colors inline-block hover:translate-x-1 transform duration-300"
+                  >
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -122,6 +137,19 @@ export function Footer() {
           <p className="text-sm text-gray-500">
             © {currentYear} {portfolio.personal.name}. All rights reserved.
           </p>
+
+          <div className="flex items-center gap-6 text-sm text-gray-400">
+            {legalLinks.map((link) => (
+              <Link 
+                key={link.name} 
+                href={link.href}
+                className="hover:text-brand-400 transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span>Built with</span>
             <span className="text-brand-500 animate-pulse">♥</span>
